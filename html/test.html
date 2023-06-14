@@ -1,0 +1,32 @@
+<title>Test WSGI-GPT2</title>
+
+<style>
+    body {margin: 100px; text-align: center;}
+    button {cursor: pointer; font-size: 200%;}
+</style>
+
+<p>Enter Sample Text: <input id="text" type="text" /></p>
+<p><button id="btn-post">Post</button></p>
+<h3>Response:</h3>
+<p id="p-response"></p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.min.js"></script>
+<script>
+    var textInput = document.querySelector('#text');
+    var btnPost = document.querySelector('#btn-post');
+    var pResponse = document.querySelector('#p-response');
+    var onSucceed = function(err, res) {
+        if (res && res.ok && res.text) {
+            console.log(res);
+            pResponse.innerText = res.text;
+        } else {
+            alert('Request failed.');
+        }
+    }
+    btnPost.addEventListener('click', function(){
+        superagent.post('http://localhost:8000')
+            .set('Content-Type', 'text/plain')
+            .send(textInput.value)
+            .end(onSucceed);
+    });
+</script>
